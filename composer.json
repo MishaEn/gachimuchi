@@ -1,0 +1,17 @@
+{
+    "name": "misha/gachimuchi",
+    "autoload": {
+        "psr-4": {
+            "Misha\\Gachimuchi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Misha En",
+            "email": "mishaenn@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

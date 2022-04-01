@@ -1,0 +1,1 @@
+{"version":1,"defects":{"RentProcessTest::testProcess":4,"RentProcessTest::test_RentProcess_fail":3,"RentProcessTest::test_RentProcess_success":4},"times":{"RentProcessTest::testProcess":0.005,"RentProcessTest::test_RentProcess_fail":0.005,"RentProcessTest::test_RentProcess_success":0.008}}
