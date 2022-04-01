@@ -1,6 +1,5 @@
 <?php
 
-
 use Misha\Gachimuchi\Master;
 use Misha\Gachimuchi\RentContract;
 use Misha\Gachimuchi\RentProcess;

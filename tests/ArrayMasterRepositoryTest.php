@@ -1,7 +1,5 @@
 <?php
 
-namespace repository;
-
 use Misha\Gachimuchi\Master;
 use Misha\Gachimuchi\repository\ArrayMasterRepository;
 use PHPUnit\Framework\TestCase;

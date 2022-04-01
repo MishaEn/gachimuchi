@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Misha\Gachimuchi\Response;
 use PHPUnit\Framework\TestCase;
 
