@@ -5,7 +5,7 @@ use Misha\Gachimuchi\RentContract;
 /**
  * Class ArrayRentContractRepository
  */
-class ArrayRentContractRepository implements RentContractRepository
+class ArrayRentContractRepository implements Repository
 {
     /**
      * @var array
@@ -15,7 +15,7 @@ class ArrayRentContractRepository implements RentContractRepository
     /**
      * @param RentContract $rentContract
      */
-    public function save(RentContract $rentContract)
+    public function save($rentContract)
     {
         $this->rentContracts[(string)$rentContract->getId()] = $rentContract;
     }
@@ -29,10 +29,23 @@ class ArrayRentContractRepository implements RentContractRepository
 
     /**
      * @param $id
-     *
+     * @return false|mixed|object
+     */
+    public function getById($id)
+    {
+        if (isset($this->rentContracts[$id])) {
+            return $this->rentContracts[$id];
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $id
      * @return array
      */
-    public function getListBySlaveId($id) {
+    public function getListById($id)
+    {
         $rentContractList = [];
         foreach ($this->rentContracts as $rentContract)
         {

@@ -1,17 +1,20 @@
 <?php
+
+
 namespace Misha\Gachimuchi\repository;
-use Misha\Gachimuchi\Slave;
+
 
 /**
- * Interface SlaveRepository
+ * Interface Repository
+ * @package Misha\Gachimuchi\repository
  */
-interface SlaveRepository {
+interface Repository
+{
     /**
-     * @param Slave $slave
-     *
-     * @return void
+     * @param $object
+     * @return mixed
      */
-    public function save(Slave $slave);
+    public function save($object);
 
     /**
      * @return array
@@ -20,8 +23,7 @@ interface SlaveRepository {
 
     /**
      * @param $id
-     *
-     * @return int
+     * @return object
      */
     public function getById($id);
 }

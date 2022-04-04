@@ -2,9 +2,7 @@
 
 namespace Misha\Gachimuchi;
 use DateTime;
-use Misha\Gachimuchi\repository\MasterRepository;
-use Misha\Gachimuchi\repository\RentContractRepository;
-use Misha\Gachimuchi\repository\SlaveRepository;
+use Misha\Gachimuchi\repository\Repository;
 
 /**
  * Class RentProcess описание расчета цены аренды, проверок на возможность аренды.
@@ -12,15 +10,15 @@ use Misha\Gachimuchi\repository\SlaveRepository;
 class RentProcess {
 
     /**
-     * @var MasterRepository
+     * @var Repository
      */
     private $masterRepository;
     /**
-     * @var SlaveRepository
+     * @var Repository
      */
     private $slaveRepository;
     /**
-     * @var RentContractRepository
+     * @var Repository
      */
     private $rentContractRepository;
     /**
@@ -30,12 +28,11 @@ class RentProcess {
 
     /**
      * RentProcess constructor.
-     *
-     * @param MasterRepository       $masterRepository
-     * @param SlaveRepository        $slaveRepository
-     * @param RentContractRepository $rentContractRepository
+     * @param Repository $masterRepository
+     * @param Repository $slaveRepository
+     * @param Repository $rentContractRepository
      */
-    public function __construct(MasterRepository $masterRepository, SlaveRepository $slaveRepository, RentContractRepository $rentContractRepository)
+    public function __construct(Repository $masterRepository, Repository $slaveRepository, Repository $rentContractRepository)
     {
         $this->masterRepository = $masterRepository;
         $this->slaveRepository = $slaveRepository;
@@ -45,14 +42,18 @@ class RentProcess {
     /**
      * @param Request $request
      */
-    public function rentCheck(Request $request)
+    private function rentCheck(Request $request)
     {
-        $rentContracts = $this->rentContractRepository->getListBySlaveId($request->getSlave()->getId());
+        $rentContracts = $this->rentContractRepository->getListById($request->getSlave()->getId());
+        $requestStart = $request->getBeginDate();
+        $requestEnd = $request->getEndDate();
         foreach ($rentContracts as $rentContract)
         {
+            $contractStart = $rentContract->getBegDate();
+            $contractEnd = $rentContract->getEndDate();
             //Тут проверяем, пересекаются ли периоды
-            if (($request->getBeginDate()->format('Y-m-d H') <= $rentContract->getEndDate()->format('Y-m-d H') &&
-                $request->getEndDate()->format('Y-m-d H') >= $rentContract->getBegDate()->format('Y-m-d H')))
+            if ($this->checkPeriod($requestStart->format('Y-m-d H'),  $requestEnd->format('Y-m-d H'),
+                $contractStart->format('Y-m-d H'), $contractEnd->format('Y-m-d H')))
             {
                 //Определяем, можно ли випу из запроса получить в аренду раба
                 if (!$request->getMaster()->isVip() || $rentContract->getMaster()->isVip())
@@ -64,14 +65,26 @@ class RentProcess {
                     ' Пересечение периодов аренды с контрактом №'.
                     $rentContract->getId().
                     ', Дата начала контракта: '.
-                    $rentContract->getBegDate()->format('d.m.Y H:i').
-                    ', Дата окончания контракта: '. $rentContract->getEndDate()->format('d.m.Y H:i').$addMsg;
+                    $contractStart->format('d.m.Y H:i').
+                    ', Дата окончания контракта: '. $contractEnd->format('d.m.Y H:i').$addMsg;
                     //Добавляем ошибку в ответ
                     $this->response->addError($msg);
                 }
 
             }
         }
+    }
+
+    /**
+     * @param $requestStart
+     * @param $requestEnd
+     * @param $contractStart
+     * @param $contractEnd
+     * @return bool
+     */
+    private function checkPeriod($requestStart, $requestEnd, $contractStart, $contractEnd)
+    {
+        return $requestStart <= $contractEnd && $requestEnd >= $contractStart;
     }
 
     /**

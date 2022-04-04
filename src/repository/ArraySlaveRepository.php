@@ -5,7 +5,7 @@ use Misha\Gachimuchi\Slave;
 /**
  * Class ArraySlaveRepository
  */
-class ArraySlaveRepository implements SlaveRepository
+class ArraySlaveRepository implements Repository
 {
     /**
      * @var array
@@ -15,7 +15,7 @@ class ArraySlaveRepository implements SlaveRepository
     /**
      * @param Slave $slave
      */
-    public function save(Slave $slave)
+    public function save($slave)
     {
         $this->slaves[(string)$slave->getId()] = $slave;
     }
@@ -34,8 +34,8 @@ class ArraySlaveRepository implements SlaveRepository
      */
     public function getById($id)
     {
-        if (isset($this->slaves[(string)$id])) {
-            return $this->slaves[(string)$id];
+        if (isset($this->slaves[$id])) {
+            return $this->slaves[$id];
         }
 
         return false;
